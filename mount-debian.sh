@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DEBIAN_CHROOT_DIR=$(readlink -f /opt/debian)
+CHROOT_DIR=$(readlink -f /opt/debian)
 
-if [ $(mount | grep $DEBIAN_CHROOT_DIR | wc -l) -gt 0 ]; then
+if [ $(mount | grep $CHROOT_DIR | wc -l) -gt 0 ]; then
   for dir in /mnt/*; do
     dir=$(readlink -f $dir)/
     if ! echo "$CHROOT_DIR" | grep -q ^$dir; then
