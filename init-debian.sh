@@ -16,8 +16,6 @@ if [ ! -e "$CHROOT_SERVICES_LIST" ]; then
   exit 1
 fi
 
-MountedDirCount="$(mount | grep $CHROOT_DIR | wc -l)"
-
 mount_ext() {
   if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
     mkdir -p $EXT_DIR1_TARGET
@@ -35,7 +33,7 @@ mount_ext() {
 }
 
 start() {
-  if [ $MountedDirCount -gt 0 ]; then
+  if [ $(mount | grep $CHROOT_DIR | wc -l) -gt 0 ]; then
     echo "Chroot'ed services seems to be already started, exiting..."
     exit 1
   fi
@@ -54,7 +52,7 @@ start() {
 }
 
 stop() {
-  if [ $MountedDirCount -eq 0 ]; then
+  if [ $(mount | grep $CHROOT_DIR | wc -l) -eq 0 ]; then
     echo "Chroot'ed services seems to be already stopped, exiting..."
     exit 1
   fi
@@ -91,7 +89,7 @@ enter() {
 }
 
 status() {
-  if [ $MountedDirCount -gt 0 ]; then
+  if [ $(mount | grep $CHROOT_DIR | wc -l) -gt 0 ]; then
     echo "Chroot'ed services running..."
   else
     echo "Chroot'ed services not running!"
