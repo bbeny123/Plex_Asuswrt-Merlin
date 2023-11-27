@@ -20,14 +20,14 @@ mount_ext() {
   if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
     mkdir -p $EXT_DIR1_TARGET
     if ! mountpoint -q $EXT_DIR1_TARGET; then
-      mount -Br $EXT_DIR1 $EXT_DIR1_TARGET
+      mount -o bind $EXT_DIR1 $EXT_DIR1_TARGET
     fi
   fi
 
   if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
     mkdir -p $EXT_DIR2_TARGET
     if ! mountpoint -q $EXT_DIR2_TARGET; then
-      mount -Br $EXT_DIR2 $EXT_DIR2_TARGET
+      mount -o bind $EXT_DIR2 $EXT_DIR2_TARGET
     fi
   fi
 }
@@ -81,7 +81,7 @@ enter() {
 
   for dir in dev dev/pts proc sys; do
     if ! mountpoint -q $CHROOT_DIR/$dir; then
-      mount -B /$dir $CHROOT_DIR/$dir
+      mount -o bind /$dir $CHROOT_DIR/$dir
     fi
   done
 
