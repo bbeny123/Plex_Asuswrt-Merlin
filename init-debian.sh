@@ -2,7 +2,7 @@
 
 PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
 
-CHROOT_DIR=/opt/debian
+CHROOT_DIR=$(readlink -f /opt/debian)
 CHROOT_SERVICES_LIST=/opt/etc/chroot-services.list
 
 EXT_DIR1=/tmp/mnt/Beny/
