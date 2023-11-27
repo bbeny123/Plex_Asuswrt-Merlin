@@ -54,7 +54,7 @@ chmod 755 /opt/etc/init.d/S99debian
 ```bash
 wget -O /jffs/scripts/mount-debian.sh <link to raw mount-debian.sh>
 chmod 755 /jffs/scripts/mount-debian.sh
-echo 'sh /jffs/scripts/mount-debian.sh' >> /jffs/scripts/post-mount
+echo './jffs/scripts/mount-debian.sh' >> /jffs/scripts/post-mount
 ```
 
 #### 7 - prepare chrooted services list and create symlink to Debian
