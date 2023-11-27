@@ -21,6 +21,22 @@ fi
 
 MountedDirCount="$(mount | grep $CHROOT_DIR | wc -l)"
 
+mount_ext() {
+    if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
+        mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET
+        if ! mountpoint -q $CHROOT_DIR/$EXT_DIR1_TARGET ; then 
+            mount -Br $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET		 
+        fi
+    fi
+
+    if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
+        mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
+        if ! mountpoint -q $CHROOT_DIR/$EXT_DIR2_TARGET ; then 
+            mount -Br $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET		 
+        fi
+    fi
+}
+
 start() {
     if [ $MountedDirCount -gt 0 ]; then
         echo "Chroot'ed services seems to be already started, exiting..."
@@ -33,15 +49,7 @@ start() {
         mount -o bind /$dir $CHROOT_DIR/$dir
     done
 	
-    if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
-        mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
-        mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
-    fi
-
-    if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
-        mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
-        mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
-    fi
+    mount_ext
 
     for item in $(cat $CHROOT_SERVICES_LIST); do
         chroot $CHROOT_DIR /etc/init.d/$item start
@@ -86,15 +94,7 @@ restart() {
             mount -o bind /$dir $CHROOT_DIR/$dir
         done
 	
-        if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
-            mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
-            mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
-        fi
-
-        if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
-            mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
-            mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
-        fi
+        mount_ext
 
         for item in $(cat $CHROOT_SERVICES_LIST); do
             chroot $CHROOT_DIR /etc/init.d/$item start
@@ -103,15 +103,7 @@ restart() {
 }
 
 enter() {	
-    if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
-        mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
-        mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
-    fi
-
-    if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
-        mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
-        mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
-    fi
+    mount_ext
 
     mount -o bind /dev/ /opt/debian/dev/
     mount -o bind /dev/pts /opt/debian/dev/pts
