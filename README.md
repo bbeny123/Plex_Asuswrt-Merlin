@@ -31,8 +31,8 @@ opkg install coreutils-sha256sum debootstrap binutils perlbase-autodie
 #### 3 - remount Entware partition
 
 ```bash
-# replace '/tmp/mnt/asus-usb' with the Entware partition mount point
-mount -i -o remount,exec,dev /tmp/mnt/asus-usb
+# replace '/tmp/mnt/Beny-Debian' with the Entware partition mount point
+mount -i -o remount,exec,dev /tmp/mnt/Beny-Debian
 ```
 
 #### 4 - install chrooted Debian
