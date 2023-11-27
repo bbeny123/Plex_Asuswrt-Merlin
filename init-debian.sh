@@ -5,11 +5,6 @@ PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
 CHROOT_DIR=$(readlink -f /opt/debian)
 CHROOT_SERVICES_LIST=/opt/etc/chroot-services.list
 
-EXT_DIR1=/tmp/mnt/Beny/
-EXT_DIR1_TARGET=$CHROOT_DIR/mnt/Beny/
-EXT_DIR2=/tmp/mnt/Beny-Kingston/
-EXT_DIR2_TARGET=$CHROOT_DIR/mnt/Beny-Kingston/
-
 if [ ! -e "$CHROOT_SERVICES_LIST" ]; then
   echo "Please, define Debian services to start in $CHROOT_SERVICES_LIST first!"
   echo "One service per line. Hint: this is a script names from Debian's /etc/init.d/"
@@ -17,19 +12,16 @@ if [ ! -e "$CHROOT_SERVICES_LIST" ]; then
 fi
 
 mount_ext() {
-  if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
-    mkdir -p $EXT_DIR1_TARGET
-    if ! mountpoint -q $EXT_DIR1_TARGET; then
-      mount -o bind $EXT_DIR1 $EXT_DIR1_TARGET
+  for dir in /mnt/*; do
+    dir=$(readlink -f $dir)/
+    if ! echo "$CHROOT_DIR" | grep -q ^$dir; then
+      target_dir=$CHROOT_DIR/mnt/$(echo "$dir" | sed 's!^.*mnt/!!')
+      mkdir -p $target_dir
+      if ! mountpoint -q $target_dir; then
+        mount -o bind $dir $target_dir
+      fi
     fi
-  fi
-
-  if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
-    mkdir -p $EXT_DIR2_TARGET
-    if ! mountpoint -q $EXT_DIR2_TARGET; then
-      mount -o bind $EXT_DIR2 $EXT_DIR2_TARGET
-    fi
-  fi
+  done
 }
 
 start() {
