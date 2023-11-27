@@ -29,7 +29,7 @@ mount_ext() {
 	if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
 		mkdir -p $EXT_DIR2_TARGET
 		if ! mountpoint -q $EXT_DIR2_TARGET; then
-			mount -Br $EXT_DIR2_TARGET
+			mount -Br $EXT_DIR2 $EXT_DIR2_TARGET
 		fi
 	fi
 }
