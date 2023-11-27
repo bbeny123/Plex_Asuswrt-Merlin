@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DEBIAN_CHROOT_DIR=/opt/debian
+DEBIAN_CHROOT_DIR=$(readlink -f /opt/debian)
 
 DEBIAN_EXT_DIR1=/tmp/mnt/Beny/
 DEBIAN_EXT_DIR1_TARGET=$DEBIAN_CHROOT_DIR/mnt/Beny/
