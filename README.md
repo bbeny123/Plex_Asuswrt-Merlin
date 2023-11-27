@@ -45,7 +45,7 @@ debootstrap --variant=minbase --arch=arm64 bookworm /opt/debian/ http://ftp.debi
 
 ```bash
 rm /opt/etc/init.d/S99debian
-wget -O /opt/etc/init.d/S99debian https://raw.githubusercontent.com/bbeny123/Plex_Asuswrt-Merlin/main/init-debian.sh?token=GHSAT0AAAAAACJRKNCNV2VESSSV6Q6AMP7WZLE2HOA
+wget -O /opt/etc/init.d/S99debian https://raw.githubusercontent.com/bbeny123/Plex_Asuswrt-Merlin/main/init-debian.sh?token=GHSAT0AAAAAACJRKNCN47DTLTCKKOPAEQJIZLE2T7Q
 chmod 755 /opt/etc/init.d/S99debian
 ```
 
