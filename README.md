@@ -113,7 +113,7 @@ echo 'plexmediaserver' >> /opt/etc/chroot-services.list
 debian restart
 ```
 
-> After about 30 seconds, the server should be reachable at: [\<router-ip-address\>:32400/web](\<router-ip-address\>:32400/web) like [192.168.1.1:32400/web](192.168.1.1:32400/web) or [router.asus.com:32400/web](router.asus.com:32400/web)
+> After about 30 seconds, the server should be reachable at: [\<router-ip-address\>:32400/web](http:\\\<router-ip-address\>:32400/web) like [192.168.1.1:32400/web](http:\\192.168.1.1:32400/web) or [router.asus.com:32400/web](http:\\router.asus.com:32400/web)
 
 > When configuring libraries, CPU/RAM consumption will also be close to 100%. Web-panel and Debian will be unresponsive during this time.
 > After configuring the libraries and downloading the metadata, the Plex Media Server should start working well.
