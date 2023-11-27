@@ -4,12 +4,12 @@ PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
 
 # Folder with Debian
 
-CHROOT_DIR=##CHROOT_DIR##
+CHROOT_DIR=/tmp/mnt/Beny-Debian/entware/debian
 
-##EXT_DIR1##
-##EXT_DIR1_TARGET##
-##EXT_DIR2##
-##EXT_DIR2_TARGET##
+EXT_DIR1=/tmp/mnt/Beny/
+EXT_DIR1_TARGET=/mnt/Beny/
+EXT_DIR2=/tmp/mnt/Beny-Kingston/
+EXT_DIR2_TARGET=/mnt/Beny-Kingston/
 
 CHROOT_SERVICES_LIST=/opt/etc/chroot-services.list
 
@@ -33,15 +33,15 @@ start() {
         mount -o bind /$dir $CHROOT_DIR/$dir
     done
 	
-	if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
-		mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
-		mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
-	fi
-	
-	if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
-		mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
-		mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
-	fi
+    if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
+        mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
+        mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
+    fi
+
+    if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
+        mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
+        mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
+    fi
 
     for item in $(cat $CHROOT_SERVICES_LIST); do
         chroot $CHROOT_DIR /etc/init.d/$item start
@@ -86,15 +86,15 @@ restart() {
             mount -o bind /$dir $CHROOT_DIR/$dir
         done
 	
-		if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
-			mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
-			mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
-		fi
-		
-		if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
-			mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
-			mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
-		fi
+        if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
+            mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
+            mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
+        fi
+
+        if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
+            mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
+            mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
+        fi
 
         for item in $(cat $CHROOT_SERVICES_LIST); do
             chroot $CHROOT_DIR /etc/init.d/$item start
@@ -103,15 +103,15 @@ restart() {
 }
 
 enter() {	
-	if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
-		mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
-		mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
-	fi
-	
-	if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
-		mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
-		mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
-	fi
+    if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
+        mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
+        mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
+    fi
+
+    if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
+        mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
+        mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
+    fi
 
     mount -o bind /dev/ /opt/debian/dev/
     mount -o bind /dev/pts /opt/debian/dev/pts
