@@ -6,10 +6,10 @@ PATH=/opt/bin:/opt/sbin:/sbin:/bin:/usr/sbin:/usr/bin
 
 CHROOT_DIR=##CHROOT_DIR##
 
-# Some folder outside of sandbox, will be mounted to /mnt folder in Debian
-# Uncommented "EXT_DIR=" line if you need to mount a folder inside debian (remove #)
-
-##EXT_DIR##
+##EXT_DIR1##
+##EXT_DIR1_TARGET##
+##EXT_DIR2##
+##EXT_DIR2_TARGET##
 
 CHROOT_SERVICES_LIST=/opt/etc/chroot-services.list
 
@@ -32,8 +32,16 @@ start() {
     for dir in dev proc sys; do
         mount -o bind /$dir $CHROOT_DIR/$dir
     done
-
-    [ -z "$EXT_DIR" ] || mount -o bind $EXT_DIR $CHROOT_DIR/mnt
+	
+	if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
+		mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
+		mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
+	fi
+	
+	if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
+		mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
+		mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
+	fi
 
     for item in $(cat $CHROOT_SERVICES_LIST); do
         chroot $CHROOT_DIR /etc/init.d/$item start
@@ -77,8 +85,16 @@ restart() {
         for dir in dev proc sys; do
             mount -o bind /$dir $CHROOT_DIR/$dir
         done
-
-        [ -z "$EXT_DIR" ] || mount -o bind $EXT_DIR $CHROOT_DIR/mnt
+	
+		if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
+			mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
+			mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
+		fi
+		
+		if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
+			mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
+			mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
+		fi
 
         for item in $(cat $CHROOT_SERVICES_LIST); do
             chroot $CHROOT_DIR /etc/init.d/$item start
@@ -86,8 +102,16 @@ restart() {
     fi
 }
 
-enter() {
-    [ -z "$EXT_DIR" ] || mount -o bind $EXT_DIR $CHROOT_DIR/mnt
+enter() {	
+	if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
+		mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET		
+		mount -o bind $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
+	fi
+	
+	if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
+		mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET		
+		mount -o bind $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
+	fi
 
     mount -o bind /dev/ /opt/debian/dev/
     mount -o bind /dev/pts /opt/debian/dev/pts
