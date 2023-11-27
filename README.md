@@ -44,19 +44,21 @@ debootstrap --variant=minbase --arch=arm64 bookworm /opt/debian/ http://ftp.debi
 
 ```bash
 rm /opt/etc/init.d/S99debian
-wget -O /opt/etc/init.d/S99debian <link to raw init-debian.sh>
+wget -O /opt/etc/init.d/S99debian https://github.com/bbeny123/Plex_Asuswrt-Merlin/blob/da54629f97ddf08a02afd8a47cfe4511385368f4/init-debian.sh
 chmod 755 /opt/etc/init.d/S99debian
 ```
 
-#### 6 - prepare Debian's external dir mount script
+#### * - prepare Debian's remount hotplugged USB script
+
+> prerequisite: `JFFS custom scripts and configs` enabled (`router WebUI -> Administration -> System`)
 
 ```bash
-wget -O /jffs/scripts/mount-debian.sh <link to raw mount-debian.sh>
+wget -O /jffs/scripts/mount-debian.sh https://github.com/bbeny123/Plex_Asuswrt-Merlin/blob/da54629f97ddf08a02afd8a47cfe4511385368f4/mount-debian.sh
 chmod 755 /jffs/scripts/mount-debian.sh
 echo './jffs/scripts/mount-debian.sh' >> /jffs/scripts/post-mount
 ```
 
-#### 7 - prepare chrooted services list and create symlink to Debian
+#### 6 - prepare chrooted services list and create symlink to Debian
 
 ```bash
 touch /opt/etc/chroot-services.list
@@ -70,26 +72,26 @@ ln -s /opt/etc/init.d/S99debian /opt/bin/debian
 cp /etc/hosts /opt/debian/etc/
 ```
 
-#### 8 - enter debian
+#### 7 - enter debian
 
 ```bash
 debian enter
 ```
 
-#### 9 - upgrade packages and install those required by Plex Media Server
+#### 8 - upgrade packages and install those required by Plex Media Server
 
 ```bash
 apt update && apt upgrade -y
 apt install -y apt-transport-https curl gnupg procps
 ```
 
-#### 10 - configure timezone
+#### 9 - configure timezone
 
 ```bash
 dpkg-reconfigure tzdata
 ```
 
-#### 11 - instal Plex Media Server
+#### 10 - instal Plex Media Server
 
 ```bash
 curl -sS https://downloads.plex.tv/plex-keys/PlexSign.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/plexmediaserver.gpg
@@ -102,19 +104,19 @@ apt install plexmediaserver
 > During initialization (which will take about 5-15min) CPU/RAM usage will be close to 100%.
 > The server will be almost unusable during this time so I recommend just waiting it out.​
 
-#### 12 - exit Debian
+#### 11 - exit Debian
 
 ```bash
 exit
 ```
 
-#### 13 - add Plex Media Server to chrooted services list
+#### 12 - add Plex Media Server to chrooted services list
 
 ```bash
 echo 'plexmediaserver' >> /opt/etc/chroot-services.list
 ```
 
-#### 14 - restart Debian
+#### 13 - restart Debian
 
 ```bash
 debian restart
