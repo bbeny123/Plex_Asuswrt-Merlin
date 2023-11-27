@@ -6,9 +6,9 @@ CHROOT_DIR=/opt/debian
 CHROOT_SERVICES_LIST=/opt/etc/chroot-services.list
 
 EXT_DIR1=/tmp/mnt/Beny/
-EXT_DIR1_TARGET=/mnt/Beny/
+EXT_DIR1_TARGET=$CHROOT_DIR/mnt/Beny/
 EXT_DIR2=/tmp/mnt/Beny-Kingston/
-EXT_DIR2_TARGET=/mnt/Beny-Kingston/
+EXT_DIR2_TARGET=$CHROOT_DIR/mnt/Beny-Kingston/
 
 if [ ! -e "$CHROOT_SERVICES_LIST" ]; then
 	echo "Please, define Debian services to start in $CHROOT_SERVICES_LIST first!"
@@ -20,16 +20,16 @@ MountedDirCount="$(mount | grep $CHROOT_DIR | wc -l)"
 
 mount_ext() {
 	if [ ! -z "$EXT_DIR1" ] && [ ! -z "$EXT_DIR1_TARGET" ]; then
-		mkdir -p $CHROOT_DIR/$EXT_DIR1_TARGET
-		if ! mountpoint -q $CHROOT_DIR/$EXT_DIR1_TARGET; then
-			mount -Br $EXT_DIR1 $CHROOT_DIR/$EXT_DIR1_TARGET
+		mkdir -p $EXT_DIR1_TARGET
+		if ! mountpoint -q $EXT_DIR1_TARGET; then
+			mount -Br $EXT_DIR1 $EXT_DIR1_TARGET
 		fi
 	fi
 
 	if [ ! -z "$EXT_DIR2" ] && [ ! -z "$EXT_DIR2_TARGET" ]; then
-		mkdir -p $CHROOT_DIR/$EXT_DIR2_TARGET
-		if ! mountpoint -q $CHROOT_DIR/$EXT_DIR2_TARGET; then
-			mount -Br $EXT_DIR2 $CHROOT_DIR/$EXT_DIR2_TARGET
+		mkdir -p $EXT_DIR2_TARGET
+		if ! mountpoint -q $EXT_DIR2_TARGET; then
+			mount -Br $EXT_DIR2_TARGET
 		fi
 	fi
 }
