@@ -45,11 +45,19 @@ debootstrap --variant=minbase --arch=arm64 bookworm /opt/debian/ http://ftp.debi
 
 ```bash
 rm /opt/etc/init.d/S99debian
-wget -O /opt/etc/init.d/S99debian https://raw.githubusercontent.com/bbeny123/Plex_Asuswrt-Merlin/main/init-debian.sh?token=GHSAT0AAAAAACJRKNCN47DTLTCKKOPAEQJIZLE2T7Q
+wget -O /opt/etc/init.d/S99debian <link to raw init-debian.sh>
 chmod 755 /opt/etc/init.d/S99debian
 ```
 
-#### 6 - prepare chrooted services list and create symlink to Debian
+#### 6 - prepare Debian's external dir mount script
+
+```bash
+wget -O /jffs/scripts/mount-debian.sh <link to raw mount-debian.sh>
+chmod 755 /jffs/scripts/mount-debian.sh
+echo 'sh /jffs/scripts/mount-debian.sh' >> /jffs/scripts/post-mount
+```
+
+#### 7 - prepare chrooted services list and create symlink to Debian
 
 ```bash
 touch /opt/etc/chroot-services.list
@@ -63,26 +71,26 @@ ln -s /opt/etc/init.d/S99debian /opt/bin/debian
 cp /etc/hosts /opt/debian/etc/
 ```
 
-#### 7 - enter debian
+#### 8 - enter debian
 
 ```bash
 debian enter
 ```
 
-#### 8 - upgrade packages and install those required by Plex Media Server
+#### 9 - upgrade packages and install those required by Plex Media Server
 
 ```bash
 apt update && apt upgrade -y
 apt install -y apt-transport-https curl gnupg procps
 ```
 
-#### 9 - configure timezone
+#### 10 - configure timezone
 
 ```bash
 dpkg-reconfigure tzdata
 ```
 
-#### 10 - instal Plex Media Server
+#### 11 - instal Plex Media Server
 
 ```bash
 curl -sS https://downloads.plex.tv/plex-keys/PlexSign.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/plexmediaserver.gpg
@@ -95,19 +103,19 @@ apt install plexmediaserver
 > During initialization (which will take about 5-15min) CPU/RAM usage will be close to 100%.
 > The server will be almost unusable during this time so I recommend just waiting it out.​
 
-#### 11 - exit Debian
+#### 12 - exit Debian
 
 ```bash
 exit
 ```
 
-#### 12 - add Plex Media Server to chrooted services list
+#### 13 - add Plex Media Server to chrooted services list
 
 ```bash
 echo 'plexmediaserver' >> /opt/etc/chroot-services.list
 ```
 
-#### 13 - restart Debian
+#### 14 - restart Debian
 
 ```bash
 debian restart
