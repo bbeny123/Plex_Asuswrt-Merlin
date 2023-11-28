@@ -132,3 +132,9 @@ debian restart
 
 > When configuring libraries, CPU/RAM consumption will also be close to 100%. Web-panel and Debian will be unresponsive during this time.
 > After configuring the libraries and downloading the metadata, the Plex Media Server should start working well.
+
+#### Based on:
+- <https://hqt.ro/how-to-install-debian-stretch-arm/> (accessed by [The Wayback Machine](https://web.archive.org/web/20230511031803/https://hqt.ro/how-to-install-debian-stretch-arm/))
+- <https://www.hqt.ro/plex-media-server-on-asuswrt-armhf-routers/> (accessed by [The Wayback Machine](https://web.archive.org/web/20230512030731/https://hqt.ro/plex-media-server-on-asuswrt-armhf-routers/))
+- <https://www.snbforums.com/threads/asus-rt-ac86u-and-debian-bullseye-nextcloud.79428/>
+
