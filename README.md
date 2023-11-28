@@ -44,7 +44,7 @@ debootstrap --variant=minbase --arch=arm64 bookworm /opt/debian/ http://ftp.debi
 
 ```bash
 rm /opt/etc/init.d/S99debian
-wget -O /opt/etc/init.d/S99debian https://github.com/bbeny123/Plex_Asuswrt-Merlin/blob/da54629f97ddf08a02afd8a47cfe4511385368f4/init-debian.sh
+wget -O /opt/etc/init.d/S99debian https://raw.githubusercontent.com/bbeny123/Plex_Asuswrt-Merlin/main/init-debian.sh
 chmod 755 /opt/etc/init.d/S99debian
 ```
 > by default, all subdirs of `/tmp/mnt/` (except the *Entware* partition) will be bind-mounted on **chrooted Debian's** `/mnt/` (making them visible by *Plex Media Server*)
@@ -56,7 +56,7 @@ chmod 755 /opt/etc/init.d/S99debian
 > prerequisite: `JFFS custom scripts and configs` enabled (`router WebUI -> Administration -> System`)
 
 ```bash
-wget -O /jffs/scripts/mount-debian.sh https://github.com/bbeny123/Plex_Asuswrt-Merlin/blob/da54629f97ddf08a02afd8a47cfe4511385368f4/mount-debian.sh
+wget -O /jffs/scripts/mount-debian.sh https://raw.githubusercontent.com/bbeny123/Plex_Asuswrt-Merlin/main/mount-debian.sh
 chmod 755 /jffs/scripts/mount-debian.sh
 echo './jffs/scripts/mount-debian.sh' >> /jffs/scripts/post-mount
 ```
