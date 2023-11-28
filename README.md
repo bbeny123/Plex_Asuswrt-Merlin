@@ -47,8 +47,11 @@ rm /opt/etc/init.d/S99debian
 wget -O /opt/etc/init.d/S99debian https://github.com/bbeny123/Plex_Asuswrt-Merlin/blob/da54629f97ddf08a02afd8a47cfe4511385368f4/init-debian.sh
 chmod 755 /opt/etc/init.d/S99debian
 ```
+> by default, all subdirs of `/tmp/mnt/` (except the *Entware* partition) will be bind-mounted on **chrooted Debian's** `/mnt/` (making them visible by *Plex Media Server*)
 
 #### * - prepare Debian's remount hotplugged USB script
+
+> skipping this step, newly attached USB drives will be accessible from *Debian* (and thus *Plex Media Server*) only after rebooting the router or manually executing `debian restart` / `debian enter` via SSH
 
 > prerequisite: `JFFS custom scripts and configs` enabled (`router WebUI -> Administration -> System`)
 
