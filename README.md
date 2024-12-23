@@ -92,9 +92,16 @@ apt install -y apt-transport-https curl gnupg procps
 
 ```bash
 dpkg-reconfigure tzdata
+
 ```
 
-#### 10 - instal Plex Media Server
+#### 10 - ensure that `/usr/sbin/init` is not a symlink pointing to `systemd`
+
+```bash
+[ -f /usr/sbin/init ] && ls -l /usr/sbin/init | grep -q systemd && mv -f /usr/sbin/init /usr/sbin/init.bak
+```
+
+#### 11 - instal Plex Media Server
 
 ```bash
 curl -sS https://downloads.plex.tv/plex-keys/PlexSign.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/plexmediaserver.gpg
@@ -107,19 +114,19 @@ apt install plexmediaserver
 > During initialization (which will take about 5-15min) CPU/RAM usage will be close to 100%.
 > The server will be almost unusable during this time so I recommend just waiting it out.​
 
-#### 11 - exit Debian
+#### 12 - exit Debian
 
 ```bash
 exit
 ```
 
-#### 12 - add Plex Media Server to chrooted services list
+#### 13 - add Plex Media Server to chrooted services list
 
 ```bash
 echo 'plexmediaserver' >> /opt/etc/chroot-services.list
 ```
 
-#### 13 - restart Debian
+#### 14 - restart Debian
 
 ```bash
 debian restart
