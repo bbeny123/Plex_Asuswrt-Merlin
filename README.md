@@ -110,8 +110,8 @@ apt update
 apt install plexmediaserver
 ```
 
-> After installation, the server will start automatically.
-> During initialization (which will take about 5-15min) CPU/RAM usage will be close to 100%.
+> After installation, the server will start automatically.\
+> During initialization (which will take about 5-15min) CPU/RAM usage will be close to 100%.\
 > The server will be almost unusable during this time so I recommend just waiting it out.​
 
 #### 12 - exit Debian
@@ -137,7 +137,8 @@ debian restart
 > - [192.168.1.1:32400/web](http://192.168.1.1:32400/web)
 > - [router.asus.com:32400/web](http://router.asus.com:32400/web)
 
-> When configuring libraries, CPU/RAM consumption will also be close to 100%. Web-panel and Debian will be unresponsive during this time.
+> When configuring libraries, CPU/RAM consumption will also be close to 100%.\
+> Web-panel and Debian will be unresponsive during this time.\
 > After configuring the libraries and downloading the metadata, the Plex Media Server should start working well.
 
 #### Based on:
@@ -145,3 +146,36 @@ debian restart
 - <https://www.hqt.ro/plex-media-server-on-asuswrt-armhf-routers/> (accessed by [The Wayback Machine](https://web.archive.org/web/20230512030731/https://hqt.ro/plex-media-server-on-asuswrt-armhf-routers/))
 - <https://www.snbforums.com/threads/asus-rt-ac86u-and-debian-bullseye-nextcloud.79428/>
 
+## Update procedure
+
+#### 1 - ssh to router
+
+#### * - update amtm and entware packages using amtm
+
+> This step may overwrite `/opt/etc/init.d/S99debian` file.\
+> In such a case, [step 5) of the installation procedure](#5---prepare-debians-initd-script) will need to be performed again.
+
+#### 2 - enter debian
+
+```bash
+debian enter
+```
+
+#### 2 - ensure that `/usr/sbin/init` is not a symlink pointing to `systemd`
+
+```bash
+[ -f /usr/sbin/init ] && ls -l /usr/sbin/init | grep -q systemd && mv -f /usr/sbin/init /usr/sbin/init.bak
+```
+
+#### 3 - upgrade debian packages
+
+```bash
+apt update && apt upgrade -y
+```
+
+#### * - restart Debian
+
+```bash
+exit
+debian restart
+```
