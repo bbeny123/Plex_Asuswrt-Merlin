@@ -47,7 +47,7 @@ rm /opt/etc/init.d/S99debian
 wget -O /opt/etc/init.d/S99debian https://raw.githubusercontent.com/bbeny123/Plex_Asuswrt-Merlin/main/init-debian.sh
 chmod 755 /opt/etc/init.d/S99debian
 ```
-> by default, all subdirs of `/tmp/mnt/` (except the *Entware* partition) will be bind-mounted on **chrooted Debian's** `/mnt/` (making them visible by *Plex Media Server*)
+> by default, all subdirs of `/tmp/mnt/` (except the *Entware* partition) will be bind-mounted on **chrooted Debian's** `/mnt/` (making them visible to *Plex Media Server*)
 
 #### * - prepare Debian's remount hotplugged USB script
 
