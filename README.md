@@ -161,13 +161,13 @@ debian restart
 debian enter
 ```
 
-#### 2 - ensure that `/usr/sbin/init` is not a symlink pointing to `systemd`
+#### 3 - ensure that `/usr/sbin/init` is not a symlink pointing to `systemd`
 
 ```bash
 [ -f /usr/sbin/init ] && ls -l /usr/sbin/init | grep -q systemd && mv -f /usr/sbin/init /usr/sbin/init.bak
 ```
 
-#### 3 - upgrade debian packages
+#### 4 - upgrade debian packages
 
 ```bash
 apt update && apt upgrade -y
