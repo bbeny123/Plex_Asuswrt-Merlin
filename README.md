@@ -1,23 +1,21 @@
-#### Prerequisites:
+> **Steps marked with an asterisk (\*) are optional.**
 
-- installed Entware
+#### Prerequisites
+
+- Entware installed
 - SWAP enabled (2GB or more recommended)
 
-> **\* steps are optional.**
+#### 1 - ssh into router
 
-#### 1 - ssh to router
+#### \* - increase swappiness (if set to 0)
 
-#### * - increase swappiness if it is 0 
+> Increasing swappiness can significantly improve Plex performance
 
-> this can significantly improved the performance of the Plex Media Server
-  
 ```bash
-# check current value of swappiness
+# check current swappiness value
 cat /proc/sys/vm/swappiness
-```
 
-```bash
-# change swappiness on runtime and persists it after reboot
+# change swappiness at runtime and make it persistent across reboots
 echo 10 > /proc/sys/vm/swappiness
 echo 'echo 10 > /proc/sys/vm/swappiness' >> /jffs/scripts/post-mount
 ```
@@ -37,31 +35,43 @@ mount -i -o remount,exec,dev /opt/..
 #### 4 - install chrooted Debian
 
 ```bash
-debootstrap --variant=minbase --arch=arm64 bookworm /opt/debian/ http://ftp.debian.org/debian/
+debootstrap --variant=minbase --arch=arm64 bookworm /opt/debian/ https://ftp.debian.org/debian/
 ```
 
-#### 5 - prepare Debian's init.d script
+#### 5 - set up Debian init.d script
 
 ```bash
 rm /opt/etc/init.d/S99debian
 wget -O /opt/etc/init.d/S99debian https://raw.githubusercontent.com/bbeny123/Plex_Asuswrt-Merlin/main/init-debian.sh
 chmod 755 /opt/etc/init.d/S99debian
 ```
-> by default, all subdirs of `/tmp/mnt/` (except the *Entware* partition) will be bind-mounted on **chrooted Debian's** `/mnt/` (making them visible to *Plex Media Server*)
 
-#### * - prepare Debian's remount hotplugged USB script
+> By default, all subdirs of `/tmp/mnt/` (excluding the **Entware** partition) are bind-mounted to the **Debian**
+`/mnt/`, making them visible to **Plex**
 
-> skipping this step, newly attached USB drives will be accessible from *Debian* (and thus *Plex Media Server*) only after rebooting the router or manually executing `debian restart` / `debian enter` via SSH
+#### \* - set up hot-plugging of USB drives in Debian
 
-> prerequisite: `JFFS custom scripts and configs` enabled (`router WebUI -> Administration -> System`)
+> Skipping this step, hot-plugged USB drives will only become available to **Debian** (and thus accessible by **Plex**)
+> after a router reboot or a manual `debian restart` / `debian enter`
+
+> **Prerequisite:** `JFFS custom scripts and configs` enabled (`router WebUI -> Administration -> System`)
 
 ```bash
-wget -O /jffs/scripts/mount-debian.sh https://raw.githubusercontent.com/bbeny123/Plex_Asuswrt-Merlin/main/mount-debian.sh
-chmod 755 /jffs/scripts/mount-debian.sh
-echo './jffs/scripts/mount-debian.sh' >> /jffs/scripts/post-mount
+echo 'debian postmount "$1"' >> /jffs/scripts/post-mount
 ```
 
-#### 6 - prepare chrooted services list and create symlink to Debian
+#### \* - set up Debian graceful shutdown on Entware partition unmount
+
+> This step ensures a graceful shutdown of **Debian** (and thus **Plex**) when the **Entware** partition is unmounted.  
+> This also prevents most `Device or resource busy` errors, making the unmount process significantly faster.
+
+> **Prerequisite:** `JFFS custom scripts and configs` enabled (`router WebUI -> Administration -> System`)
+
+```bash
+echo 'debian unmount "$1"' >> /jffs/scripts/unmount
+```
+
+#### 6 - prepare chrooted services list and set up `debian` symlink
 
 ```bash
 touch /opt/etc/chroot-services.list
@@ -69,7 +79,7 @@ chmod 755 /opt/etc/chroot-services.list
 ln -s /opt/etc/init.d/S99debian /opt/bin/debian
 ```
 
-#### * - copy hosts file to Debian
+#### \* - copy hosts file to Debian
 
 ```bash
 cp /etc/hosts /opt/debian/etc/
@@ -81,7 +91,7 @@ cp /etc/hosts /opt/debian/etc/
 debian enter
 ```
 
-#### 8 - upgrade packages and install those required by Plex Media Server
+#### 8 - upgrade packages and install Plex prerequisites
 
 ```bash
 apt update && apt upgrade -y
@@ -95,13 +105,13 @@ dpkg-reconfigure tzdata
 
 ```
 
-#### 10 - ensure that `/usr/sbin/init` is not a symlink pointing to `systemd`
+#### 10 - ensure `/usr/sbin/init` is not a `systemd` symlink
 
 ```bash
 [ -f /usr/sbin/init ] && ls -l /usr/sbin/init | grep -q systemd && mv -f /usr/sbin/init /usr/sbin/init.bak
 ```
 
-#### 11 - instal Plex Media Server
+#### 11 - install Plex Media Server
 
 ```bash
 curl -sS https://downloads.plex.tv/plex-keys/PlexSign.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/plexmediaserver.gpg
@@ -110,9 +120,9 @@ apt update
 apt install plexmediaserver
 ```
 
-> After installation, the server will start automatically.\
-> During initialization (which will take about 5-15min) CPU/RAM usage will be close to 100%.\
-> The server will be almost unusable during this time so I recommend just waiting it out.​
+> Plex Media Server will start automatically after installation.  
+> During initial setup, which can take 5–15 minutes, CPU and RAM usage may spike to nearly 100%.  
+> The router may become unresponsive during this time — just let it finish.
 
 #### 12 - exit Debian
 
@@ -132,28 +142,23 @@ echo 'plexmediaserver' >> /opt/etc/chroot-services.list
 debian restart
 ```
 
-> After about 30 seconds, the server should be reachable at: [\<router-ip-address\>:32400/web](http://\<router-ip-address\>:32400/web) like:
+> After about 30 seconds, the Plex should be reachable at `<router-ip>:32400/web`. **For example:**
 > - [192.168.18.200:32400/web](http://192.168.18.200:32400/web)
 > - [192.168.1.1:32400/web](http://192.168.1.1:32400/web)
 > - [router.asus.com:32400/web](http://router.asus.com:32400/web)
 
-> When configuring libraries, CPU/RAM consumption will also be close to 100%.\
-> Web-panel and Debian will be unresponsive during this time.\
-> After configuring the libraries and downloading the metadata, the Plex Media Server should start working well.
+> **Note:** Plex library configuration may cause very high CPU and RAM usage.  
+> During this process, the router's web interfaces and SSH may become unresponsive.  
+> Once library configuration is complete, overall performance should return to normal.
 
-#### Based on:
-- <https://hqt.ro/how-to-install-debian-stretch-arm/> (accessed by [The Wayback Machine](https://web.archive.org/web/20230511031803/https://hqt.ro/how-to-install-debian-stretch-arm/))
-- <https://www.hqt.ro/plex-media-server-on-asuswrt-armhf-routers/> (accessed by [The Wayback Machine](https://web.archive.org/web/20230512030731/https://hqt.ro/plex-media-server-on-asuswrt-armhf-routers/))
-- <https://www.snbforums.com/threads/asus-rt-ac86u-and-debian-bullseye-nextcloud.79428/>
+### Update procedure
 
-## Update procedure
+#### 1 - ssh into router
 
-#### 1 - ssh to router
+#### \* - update amtm and Entware packages using `amtm`
 
-#### * - update amtm and entware packages using amtm
-
-> This step may overwrite `/opt/etc/init.d/S99debian` file.\
-> In such a case, [step 5) of the installation procedure](#5---prepare-debians-initd-script) will need to be performed again.
+> **Warning:** This step may overwrite `/opt/etc/init.d/S99debian`.  
+> If this happens, repeat [step 5 of the installation procedure](#5---set-up-debian-initd-script) to restore it.
 
 #### 2 - enter debian
 
@@ -161,21 +166,40 @@ debian restart
 debian enter
 ```
 
-#### 3 - ensure that `/usr/sbin/init` is not a symlink pointing to `systemd`
+#### 3 - hold Plex and upgrade other Debian packages
+
+> Plex should be upgraded separately to prevent other packages from creating a problematic `systemd` symlink.  
+> Alternatively – upgrade everything at once, then fix the symlink and reinstall Plex.
+
+```bash
+apt-mark hold plexmediaserver
+apt update && apt upgrade -y
+```
+
+#### 4 - ensure `/usr/sbin/init` is not a `systemd` symlink
 
 ```bash
 [ -f /usr/sbin/init ] && ls -l /usr/sbin/init | grep -q systemd && mv -f /usr/sbin/init /usr/sbin/init.bak
 ```
 
-#### 4 - upgrade debian packages
+#### 5 - unhold and upgrade Plex
 
 ```bash
+apt-mark unhold plexmediaserver
 apt update && apt upgrade -y
 ```
 
-#### * - restart Debian
+#### \* - restart Debian
 
 ```bash
 exit
 debian restart
 ```
+
+### Sources
+
+- <https://hqt.ro/how-to-install-debian-stretch-arm/> (accessed
+  via [The Wayback Machine](https://web.archive.org/web/20230511031803/https://hqt.ro/how-to-install-debian-stretch-arm/))
+- <https://www.hqt.ro/plex-media-server-on-asuswrt-armhf-routers/> (accessed
+  via [The Wayback Machine](https://web.archive.org/web/20230512030731/https://hqt.ro/plex-media-server-on-asuswrt-armhf-routers/))
+- <https://www.snbforums.com/threads/asus-rt-ac86u-and-debian-bullseye-nextcloud.79428/>
