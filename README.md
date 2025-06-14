@@ -1,4 +1,4 @@
-> **Steps marked with an asterisk (\*) are optional.**
+> **Steps marked with an asterisk (\*) are optional**
 
 #### Prerequisites
 
