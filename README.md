@@ -2,14 +2,14 @@
 
 #### Prerequisites
 
-- Entware installed
+- **Entware** installed
 - SWAP enabled (2GB or more recommended)
 
 #### 1 - ssh into router
 
 #### \* - increase swappiness (if set to 0)
 
-> Increasing swappiness can significantly improve Plex performance
+> Increasing swappiness can significantly improve **Plex** performance
 
 ```bash
 # check current swappiness value
@@ -85,7 +85,7 @@ ln -s /opt/etc/init.d/S99debian /opt/bin/debian
 cp /etc/hosts /opt/debian/etc/
 ```
 
-#### 7 - enter debian
+#### 7 - enter Debian
 
 ```bash
 debian enter
@@ -120,7 +120,7 @@ apt update
 apt install plexmediaserver
 ```
 
-> Plex Media Server will start automatically after installation.  
+> **Plex Media Server** will start automatically after installation.  
 > During initial setup, which can take 5–15 minutes, CPU and RAM usage may spike to nearly 100%.  
 > The router may become unresponsive during this time — just let it finish.
 
@@ -142,12 +142,12 @@ echo 'plexmediaserver' >> /opt/etc/chroot-services.list
 debian restart
 ```
 
-> After about 30 seconds, the Plex should be reachable at `<router-ip>:32400/web`. **For example:**
+> After about 30 seconds, the **Plex** should be reachable at `<router-ip>:32400/web`. **For example:**
 > - [192.168.18.200:32400/web](http://192.168.18.200:32400/web)
 > - [192.168.1.1:32400/web](http://192.168.1.1:32400/web)
 > - [router.asus.com:32400/web](http://router.asus.com:32400/web)
 
-> **Note:** Plex library configuration may cause very high CPU and RAM usage.  
+> **Note: Plex** library configuration may cause very high CPU and RAM usage.  
 > During this process, the router's web interfaces and SSH may become unresponsive.  
 > Once library configuration is complete, overall performance should return to normal.
 
@@ -160,7 +160,7 @@ debian restart
 > **Warning:** This step may overwrite `/opt/etc/init.d/S99debian`.  
 > If this happens, repeat [step 5 of the installation procedure](#5---set-up-debian-initd-script) to restore it.
 
-#### 2 - enter debian
+#### 2 - enter Debian
 
 ```bash
 debian enter
@@ -168,8 +168,8 @@ debian enter
 
 #### 3 - hold Plex and upgrade other Debian packages
 
-> Plex should be upgraded separately to prevent other packages from creating a problematic `systemd` symlink.  
-> Alternatively – upgrade everything at once, then fix the symlink and reinstall Plex.
+> **Plex** should be upgraded separately to prevent other packages from creating a problematic `systemd` symlink.  
+> Alternatively – upgrade everything at once, then fix the symlink and reinstall **Plex**.
 
 ```bash
 apt-mark hold plexmediaserver
