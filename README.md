@@ -9,7 +9,8 @@
 
 #### \* - increase swappiness (if set to 0)
 
-> Increasing swappiness can significantly improve **Plex** performance
+> Increasing swappiness can significantly improve **Plex** performance.  
+> **Note:** Not recommended for RT-BE86U (and other models with 1GB+ RAM).
 
 ```bash
 # check current swappiness value
@@ -114,8 +115,8 @@ dpkg-reconfigure tzdata
 #### 11 - install Plex Media Server
 
 ```bash
-curl -sS https://downloads.plex.tv/plex-keys/PlexSign.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/plexmediaserver.gpg
-echo 'deb https://downloads.plex.tv/repo/deb public main' | tee /etc/apt/sources.list.d/plexmediaserver.list
+curl -L https://downloads.plex.tv/plex-keys/PlexSign.v2.key | gpg --yes --dearmor -o /etc/apt/keyrings/plexmediaserver.v2.gpg
+echo "deb [signed-by=/etc/apt/keyrings/plexmediaserver.v2.gpg] https://repo.plex.tv/deb/ public main" | tee /etc/apt/sources.list.d/plex.list
 apt update
 apt install plexmediaserver
 ```
